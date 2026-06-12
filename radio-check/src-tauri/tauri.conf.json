@@ -1,0 +1,62 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "RadioCheck",
+  "identifier": "com.radiocheck.app",
+  "version": "0.1.0",
+  "build": {
+    "beforeDevCommand": "bun run dev",
+    "devUrl": "http://localhost:1421",
+    "beforeBuildCommand": "bun run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "withGlobalTauri": false,
+    "windows": [
+      {
+        "label": "main",
+        "title": "RadioCheck",
+        "width": 400,
+        "height": 520,
+        "resizable": false,
+        "center": true,
+        "visible": false
+      }
+    ],
+    "security": {
+      "csp": null
+    },
+    "trayIcon": {
+      "iconPath": "icons/icon.png",
+      "iconAsTemplate": true
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "resources": ["resources/**/*"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "nsis": {}
+    }
+  },
+  "plugins": {
+    "store": {},
+    "log": {
+      "targets": [
+        { "kind": "Stdout" },
+        { "kind": "Webview" },
+        {
+          "kind": "LogDir",
+          "fileName": "radiocheck"
+        }
+      ]
+    },
+    "single-instance": {}
+  }
+}
