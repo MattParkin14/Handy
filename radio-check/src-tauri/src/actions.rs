@@ -6,6 +6,7 @@ use crate::managers::transcription::TranscriptionManager;
 use crate::settings::get_settings;
 use crate::shortcut;
 use crate::tray::{change_tray_icon, TrayIconState};
+use crate::utils;
 use crate::TranscriptionCoordinator;
 use log::{debug, error};
 use once_cell::sync::Lazy;
@@ -89,6 +90,8 @@ impl ShortcutAction for TranscribeAction {
 
         if recording_error.is_none() {
             shortcut::register_cancel_shortcut(app);
+            let _ = app.emit("recording-started", ());
+            utils::show_recording_overlay(app);
         } else {
             change_tray_icon(app, TrayIconState::Idle);
             if let Some(err) = recording_error {
@@ -126,6 +129,9 @@ impl ShortcutAction for TranscribeAction {
         rm.remove_mute();
         play_feedback_sound(app, SoundType::Stop);
 
+        // Switch overlay to "transcribing" state
+        let _ = app.emit("recording-stopped", ());
+
         let binding_id = binding_id.to_string();
 
         tauri::async_runtime::spawn(async move {
@@ -140,6 +146,7 @@ impl ShortcutAction for TranscribeAction {
                 );
 
                 if samples.is_empty() {
+                    utils::hide_recording_overlay(&ah);
                     change_tray_icon(&ah, TrayIconState::Idle);
                     return;
                 }
@@ -161,7 +168,7 @@ impl ShortcutAction for TranscribeAction {
                         // Emit the transcription so the UI can show it
                         let _ = ah.emit("transcription-complete", transcription.clone());
 
-                        // Inject into sim chat on the main thread
+                        // Inject into sim chat on the main thread, then hide overlay
                         let ah_clone = ah.clone();
                         let inject_time = Instant::now();
                         ah.run_on_main_thread(move || {
@@ -175,20 +182,24 @@ impl ShortcutAction for TranscribeAction {
                                     let _ = ah_clone.emit("chat-inject-error", e);
                                 }
                             }
+                            utils::hide_recording_overlay(&ah_clone);
                             change_tray_icon(&ah_clone, TrayIconState::Idle);
                         })
                         .unwrap_or_else(|e| {
                             error!("Failed to run chat injection on main thread: {:?}", e);
+                            utils::hide_recording_overlay(&ah);
                             change_tray_icon(&ah, TrayIconState::Idle);
                         });
                     }
                     Err(err) => {
                         error!("Transcription error: {}", err);
+                        utils::hide_recording_overlay(&ah);
                         change_tray_icon(&ah, TrayIconState::Idle);
                     }
                 }
             } else {
                 debug!("No samples from recording stop");
+                utils::hide_recording_overlay(&ah);
                 change_tray_icon(&ah, TrayIconState::Idle);
             }
         });
