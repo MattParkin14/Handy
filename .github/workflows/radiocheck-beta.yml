@@ -1,0 +1,129 @@
+name: RadioCheck Beta Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish_release:
+        description: 'Publish as a GitHub pre-release (testers download from Releases tab)'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  build:
+    name: Build Windows installer
+    permissions:
+      contents: write
+    runs-on: windows-latest
+
+    steps:
+      - name: Enable long paths
+        shell: pwsh
+        run: |
+          New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" `
+            -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force
+          git config --system core.longpaths true
+
+      - uses: actions/checkout@v4
+
+      - name: Get version
+        id: version
+        shell: bash
+        run: |
+          VERSION=$(grep -o '"version": "[^"]*"' radio-check/src-tauri/tauri.conf.json | cut -d'"' -f4)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - uses: oven-sh/setup-bun@v2
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "./radio-check/src-tauri -> target"
+          key: windows-x86_64-pc-windows-msvc
+
+      - name: Install Vulkan SDK
+        uses: humbletim/install-vulkan-sdk@v1.2
+        with:
+          version: 1.4.309.0
+          cache: true
+
+      # whisper-rs cmake builds create paths that exceed Windows MAX_PATH.
+      # Shorten the target dir to keep paths under 260 chars.
+      - name: Shorten build path
+        shell: pwsh
+        run: |
+          $drive = Split-Path -Qualifier $env:GITHUB_WORKSPACE
+          $targetDir = "$drive\t"
+          New-Item -ItemType Directory -Force -Path $targetDir | Out-Null
+          echo "CARGO_TARGET_DIR=$targetDir" >> $env:GITHUB_ENV
+
+      - name: Install frontend dependencies
+        working-directory: radio-check
+        run: bun install
+
+      - name: Download silero VAD model
+        working-directory: radio-check
+        shell: bash
+        run: |
+          mkdir -p src-tauri/resources/models
+          curl -fL -o src-tauri/resources/models/silero_vad_v4.onnx \
+            https://blob.handy.computer/silero_vad_v4.onnx
+
+      - name: Create pre-release
+        id: create-release
+        if: inputs.publish_release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data } = await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: `radiocheck-v${{ steps.version.outputs.version }}-beta.${context.runNumber}`,
+              name: `RadioCheck v${{ steps.version.outputs.version }} Beta (build ${context.runNumber})`,
+              draft: false,
+              prerelease: true,
+              body: [
+                '## RadioCheck Beta',
+                '',
+                'Windows installer for beta testing.',
+                '',
+                '**Install:** Download `RadioCheck_*.exe` below and run it — no dev tools needed.',
+                '',
+                '**What it does:** Hold your hotkey (default **F1**) to record, release to transcribe, and the text is injected into your sim chat automatically.',
+                '',
+                '**First run:** RadioCheck opens in the system tray. Right-click → Settings to pick a Whisper model and configure your sim preset.',
+              ].join('\n')
+            })
+            return data.id
+
+      - name: Build RadioCheck
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Disable AVX/FMA so the binary runs on CPUs without those extensions.
+          # Vulkan handles the heavy compute anyway.
+          GGML_NATIVE: "OFF"
+          GGML_AVX: "OFF"
+          GGML_AVX2: "OFF"
+          GGML_FMA: "OFF"
+          GGML_F16C: "OFF"
+        with:
+          projectPath: radio-check
+          releaseId: ${{ steps.create-release.outputs.result }}
+          args: --bundles nsis
+
+      - name: Resolve artifact base path
+        id: artifact-base
+        shell: pwsh
+        run: |
+          $base = if ($env:CARGO_TARGET_DIR) { $env:CARGO_TARGET_DIR } else { "radio-check/src-tauri/target" }
+          echo "base=$base" >> $env:GITHUB_OUTPUT
+
+      - name: Upload installer as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: RadioCheck-${{ steps.version.outputs.version }}-windows-x64
+          path: ${{ steps.artifact-base.outputs.base }}/release/bundle/nsis/*.exe
+          if-no-files-found: error
+          retention-days: 30
