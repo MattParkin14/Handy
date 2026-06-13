@@ -6,8 +6,9 @@ import StatusHeader from "./components/StatusHeader";
 import SettingsPanel from "./components/SettingsPanel";
 import ModelPanel from "./components/ModelPanel";
 import SetupGuide from "./components/SetupGuide";
+import AboutPanel from "./components/AboutPanel";
 
-type Tab = "status" | "settings" | "model";
+type Tab = "status" | "settings" | "model" | "about";
 
 export default function App() {
   const { loadSettings, settings, setStatus, setLastTranscription, setError } =
@@ -70,7 +71,7 @@ export default function App() {
 
       {/* Tab bar */}
       <div className="flex border-b border-gray-800">
-        {(["status", "settings", "model"] as Tab[]).map((t) => (
+        {(["status", "settings", "model", "about"] as Tab[]).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
@@ -80,17 +81,18 @@ export default function App() {
                 : "text-gray-500 hover:text-gray-300"
             }`}
           >
-            {t === "model" ? "Model" : t.charAt(0).toUpperCase() + t.slice(1)}
+            {t.charAt(0).toUpperCase() + t.slice(1)}
           </button>
         ))}
       </div>
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto">
-        {!hasModel && tab !== "model" && <SetupGuide onGoToModel={() => setTab("model")} />}
+        {!hasModel && tab !== "model" && tab !== "about" && <SetupGuide onGoToModel={() => setTab("model")} />}
         {tab === "status" && <StatusView />}
         {tab === "settings" && <SettingsPanel />}
         {tab === "model" && <ModelPanel />}
+        {tab === "about" && <AboutPanel />}
       </div>
     </div>
   );
