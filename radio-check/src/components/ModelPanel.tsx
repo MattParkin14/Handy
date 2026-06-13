@@ -26,7 +26,7 @@ export default function ModelPanel() {
     const unlisteners: Array<() => void> = [];
 
     listen<{ modelId: string; percentage: number }>(
-      "download-progress",
+      "model-download-progress",
       (e) => {
         setDownloading(e.payload.modelId);
         setProgress(e.payload.percentage);
@@ -44,7 +44,7 @@ export default function ModelPanel() {
       api.setActiveModel(modelId).catch(console.error);
     }).then((u) => unlisteners.push(u));
 
-    listen<string>("model-download-error", (e) => {
+    listen<string>("model-download-failed", (e) => {
       console.error("Download error:", e.payload);
       setDownloading(null);
       setProgress(0);
