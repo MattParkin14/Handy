@@ -134,7 +134,7 @@ function ModelRow({
     <div
       className={`rounded-lg p-3 border transition-colors ${
         isActive
-          ? "border-green-500/50 bg-green-900/20"
+          ? "border-brand/50 bg-brand-dark/20"
           : "border-gray-800 bg-gray-900/40"
       }`}
     >
@@ -145,7 +145,7 @@ function ModelRow({
               {model.name}
             </span>
             {isActive && (
-              <span className="text-xs bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded">
+              <span className="text-xs bg-brand/20 text-brand px-1.5 py-0.5 rounded">
                 Active
               </span>
             )}
@@ -161,7 +161,7 @@ function ModelRow({
               {!isActive && (
                 <button
                   onClick={onSelect}
-                  className="px-2.5 py-1 text-xs bg-green-600 hover:bg-green-500 text-white rounded transition-colors"
+                  className="px-2.5 py-1 text-xs bg-brand hover:bg-brand-light text-white rounded transition-colors"
                 >
                   Use
                 </button>
@@ -194,7 +194,7 @@ function ModelRow({
         <div className="mt-2">
           <div className="w-full h-1 bg-gray-800 rounded-full overflow-hidden">
             <div
-              className="h-full bg-green-500 rounded-full transition-all duration-300"
+              className="h-full bg-brand rounded-full transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>

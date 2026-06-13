@@ -1,7 +1,7 @@
 [package]
 name = "radio-check"
 version = "0.1.0"
-description = "RadioCheck - Voice chat for racing sims"
+description = "VoxBox Racing - Voice chat for sim racers"
 authors = []
 edition = "2021"
 license = "MIT"

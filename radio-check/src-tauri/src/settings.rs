@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_store::StoreExt;
 
-const STORE_PATH: &str = "radiocheck-settings.json";
+const STORE_PATH: &str = "voxbox-settings.json";
 
 // ─── Racing-specific types ────────────────────────────────────────────────────
 

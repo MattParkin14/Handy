@@ -1,20 +1,36 @@
-import { open } from "@tauri-apps/plugin-opener";
+import { openUrl } from "@tauri-apps/plugin-opener";
+import voxboxTile from "../assets/voxbox-tile.png";
 
 const HANDY_URL = "https://github.com/cjpais/Handy";
 
 export default function AboutPanel() {
-  const openLink = (url: string) => open(url).catch(console.error);
+  const openLink = (url: string) => openUrl(url).catch(console.error);
 
   return (
     <div className="p-4 space-y-5">
       {/* App identity */}
-      <div className="flex flex-col items-center gap-1 pt-2 pb-1">
-        <span className="text-4xl">📻</span>
-        <div className="text-base font-semibold text-gray-100">RadioCheck</div>
-        <div className="text-xs text-gray-500">v0.1.0 beta</div>
-        <div className="text-xs text-gray-500 text-center mt-1">
-          Voice dictation for racing simulators
+      <div className="flex flex-col items-center gap-2 pt-2 pb-1">
+        <img
+          src={voxboxTile}
+          alt="VoxBox Racing"
+          className="w-16 h-16 rounded-2xl shadow-lg"
+        />
+        <div className="text-base font-bold tracking-wide">
+          <span className="text-chalk">Vox</span>
+          <span className="text-brand">Box</span>
+          <span className="ml-1.5 text-[10px] font-semibold text-gray-500 uppercase tracking-[0.25em] align-middle">
+            Racing
+          </span>
         </div>
+        <div className="text-xs text-gray-500">v0.1.0 beta</div>
+        <div className="text-xs text-brand-light text-center mt-0.5 font-medium">
+          Say it. Send it. Stay flat out.
+        </div>
+        <p className="text-xs text-gray-500 text-center leading-relaxed mt-1 max-w-xs">
+          Hands-free race chat — hold a key, talk, release. Your speech is
+          transcribed locally and dropped into your sim's chat in under two
+          seconds. 100% offline, no account, no subscription.
+        </p>
       </div>
 
       <hr className="border-gray-800" />
@@ -25,17 +41,17 @@ export default function AboutPanel() {
           Built on Handy
         </div>
         <p className="text-xs text-gray-400 leading-relaxed">
-          RadioCheck is built on{" "}
+          VoxBox Racing is built on{" "}
           <button
             onClick={() => openLink(HANDY_URL)}
-            className="text-green-400 hover:text-green-300 underline underline-offset-2"
+            className="text-brand hover:text-brand-light underline underline-offset-2"
           >
             Handy
           </button>
           , an open-source desktop voice-dictation app by{" "}
           <button
             onClick={() => openLink("https://github.com/cjpais")}
-            className="text-green-400 hover:text-green-300 underline underline-offset-2"
+            className="text-brand hover:text-brand-light underline underline-offset-2"
           >
             CJ Pais
           </button>
@@ -101,7 +117,7 @@ export default function AboutPanel() {
               <div className="min-w-0">
                 <button
                   onClick={() => openLink(url)}
-                  className="text-xs text-green-400 hover:text-green-300 underline underline-offset-2 font-medium"
+                  className="text-xs text-brand hover:text-brand-light underline underline-offset-2 font-medium"
                 >
                   {name}
                 </button>

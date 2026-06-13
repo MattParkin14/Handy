@@ -65,10 +65,10 @@ export default function OverlayApp() {
                     height: `${Math.max(3, level * 100)}%`,
                     background:
                       level > 0.6
-                        ? "#4ade80"
+                        ? "#FF6B1A"
                         : level > 0.25
-                        ? "#86efac"
-                        : "#166534",
+                        ? "#FF8A47"
+                        : "#7A2E0A",
                     borderRadius: "3px",
                     transition: "height 60ms linear, background 80ms ease",
                   }}
@@ -83,7 +83,7 @@ export default function OverlayApp() {
                 className="text-xs font-semibold tracking-widest uppercase"
                 style={{ color: "#d1d5db" }}
               >
-                Recording
+                Listening…
               </span>
             </div>
           </>
@@ -92,7 +92,7 @@ export default function OverlayApp() {
           <div className="flex items-center gap-2 py-1">
             <div
               className="w-4 h-4 rounded-full animate-spin"
-              style={{ border: "2px solid #facc15", borderTopColor: "transparent" }}
+              style={{ border: "2px solid #FFD23F", borderTopColor: "transparent" }}
             />
             <span
               className="text-xs font-semibold tracking-widest uppercase"

@@ -57,7 +57,7 @@ export default function App() {
   if (!initialized || !settings) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="text-gray-400 text-sm">Loading RadioCheck...</div>
+        <div className="text-gray-400 text-sm">Loading VoxBox…</div>
       </div>
     );
   }
@@ -77,7 +77,7 @@ export default function App() {
             onClick={() => setTab(t)}
             className={`flex-1 py-2 text-xs font-medium capitalize transition-colors ${
               tab === t
-                ? "text-green-400 border-b-2 border-green-400"
+                ? "text-brand border-b-2 border-brand"
                 : "text-gray-500 hover:text-gray-300"
             }`}
           >

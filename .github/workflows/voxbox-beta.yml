@@ -1,4 +1,4 @@
-name: RadioCheck Beta Build
+name: VoxBox Racing Beta Build
 
 on:
   workflow_dispatch:
@@ -79,25 +79,27 @@ jobs:
             const { data } = await github.rest.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              tag_name: `radiocheck-v${{ steps.version.outputs.version }}-beta.${context.runNumber}`,
-              name: `RadioCheck v${{ steps.version.outputs.version }} Beta (build ${context.runNumber})`,
+              tag_name: `voxbox-v${{ steps.version.outputs.version }}-beta.${context.runNumber}`,
+              name: `VoxBox Racing v${{ steps.version.outputs.version }} Beta (build ${context.runNumber})`,
               draft: false,
               prerelease: true,
               body: [
-                '## RadioCheck Beta',
+                '## VoxBox Racing Beta',
+                '',
+                '_Say it. Send it. Stay flat out._',
                 '',
                 'Windows installer for beta testing.',
                 '',
-                '**Install:** Download `RadioCheck_*.exe` below and run it — no dev tools needed.',
+                '**Install:** Download `VoxBox.Racing_*.exe` below and run it — no dev tools needed.',
                 '',
                 '**What it does:** Hold your hotkey (default **F1**) to record, release to transcribe, and the text is injected into your sim chat automatically.',
                 '',
-                '**First run:** RadioCheck opens in the system tray. Right-click → Settings to pick a Whisper model and configure your sim preset.',
+                '**First run:** VoxBox opens in the system tray. Right-click → Settings to pick a Whisper model and configure your sim preset.',
               ].join('\n')
             })
             return data.id
 
-      - name: Build RadioCheck
+      - name: Build VoxBox Racing
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -123,7 +125,7 @@ jobs:
       - name: Upload installer as workflow artifact
         uses: actions/upload-artifact@v4
         with:
-          name: RadioCheck-${{ steps.version.outputs.version }}-windows-x64
+          name: VoxBox-Racing-${{ steps.version.outputs.version }}-windows-x64
           path: ${{ steps.artifact-base.outputs.base }}/release/bundle/nsis/*.exe
           if-no-files-found: error
           retention-days: 30

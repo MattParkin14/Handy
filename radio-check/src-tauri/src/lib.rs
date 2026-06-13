@@ -99,7 +99,7 @@ fn initialize_core_logic(app_handle: &AppHandle) {
             )
             .unwrap(),
         )
-        .tooltip("RadioCheck")
+        .tooltip("VoxBox — idle")
         .show_menu_on_left_click(true)
         .icon_as_template(true)
         .on_menu_event(|app, event| {
@@ -210,11 +210,11 @@ pub fn run() {
                     Target::new(if let Some(data_dir) = portable::data_dir() {
                         TargetKind::Folder {
                             path: data_dir.join("logs"),
-                            file_name: Some("radiocheck".into()),
+                            file_name: Some("voxbox".into()),
                         }
                     } else {
                         TargetKind::LogDir {
-                            file_name: Some("radiocheck".into()),
+                            file_name: Some("voxbox".into()),
                         }
                     })
                     .filter(|metadata| {
@@ -262,5 +262,5 @@ pub fn run() {
             Ok(())
         })
         .run(tauri::generate_context!())
-        .expect("error while running RadioCheck");
+        .expect("error while running VoxBox Racing");
 }

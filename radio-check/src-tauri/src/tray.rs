@@ -68,9 +68,9 @@ pub fn change_tray_icon(app: &AppHandle, icon: TrayIconState) {
 
 fn version_label() -> String {
     if cfg!(debug_assertions) {
-        format!("RadioCheck v{} (Dev)", env!("CARGO_PKG_VERSION"))
+        format!("VoxBox v{} (Dev)", env!("CARGO_PKG_VERSION"))
     } else {
-        format!("RadioCheck v{}", env!("CARGO_PKG_VERSION"))
+        format!("VoxBox v{}", env!("CARGO_PKG_VERSION"))
     }
 }
 

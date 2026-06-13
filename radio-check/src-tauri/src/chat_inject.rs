@@ -137,5 +137,5 @@ pub fn inject_into_sim_chat(text: &str, app_handle: &AppHandle) -> Result<(), St
 
 /// Test the injection pipeline with a dummy message (useful for settings UI preview).
 pub fn test_inject(app_handle: &AppHandle) -> Result<(), String> {
-    inject_into_sim_chat("RadioCheck test message", app_handle)
+    inject_into_sim_chat("VoxBox radio check, comms are good.", app_handle)
 }

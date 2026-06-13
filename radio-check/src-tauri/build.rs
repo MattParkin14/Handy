@@ -20,7 +20,7 @@ fn generate_tray_translations() {
 
     println!("cargo:rerun-if-changed=../src/i18n/locales");
 
-    // RadioCheck has no i18n locales directory — generate a no-op stub so
+    // VoxBox has no i18n locales directory — generate a no-op stub so
     // the module compiles even though tray.rs no longer references it.
     if !locales_dir.exists() {
         let stub = "// Auto-generated stub — no locales directory found\n";

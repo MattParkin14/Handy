@@ -59,7 +59,7 @@ export default function SettingsPanel() {
               onClick={() => handlePresetChange(opt.value)}
               className={`py-2 rounded-lg text-xs font-medium transition-colors ${
                 settings.simPreset === opt.value
-                  ? "bg-green-500 text-black"
+                  ? "bg-brand text-black"
                   : "bg-gray-800 text-gray-300 hover:bg-gray-700"
               }`}
             >
@@ -125,7 +125,7 @@ export default function SettingsPanel() {
             onBlur={() => setIsCapturing(false)}
             className={`px-3 py-1.5 rounded text-xs font-mono border transition-colors ${
               isCapturing
-                ? "bg-green-900 border-green-500 text-green-300 animate-pulse"
+                ? "bg-brand-dark/20 border-brand text-brand-light animate-pulse"
                 : "bg-gray-800 border-gray-700 text-gray-200 hover:border-gray-500"
             }`}
           >
@@ -249,7 +249,7 @@ function CustomWordsSection() {
         <button
           onClick={addWord}
           disabled={!input.trim()}
-          className="px-3 py-1 text-xs bg-green-700 hover:bg-green-600 disabled:opacity-40 text-white rounded transition-colors"
+          className="px-3 py-1 text-xs bg-brand-dark hover:bg-brand disabled:opacity-40 text-white rounded transition-colors"
         >
           Add
         </button>
@@ -310,7 +310,7 @@ function Toggle({
       aria-checked={checked}
       onClick={() => onChange(!checked)}
       className={`relative w-10 h-5 rounded-full transition-colors ${
-        checked ? "bg-green-500" : "bg-gray-700"
+        checked ? "bg-brand" : "bg-gray-700"
       }`}
     >
       <span
