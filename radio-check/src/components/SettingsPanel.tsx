@@ -173,12 +173,85 @@ export default function SettingsPanel() {
         </SettingRow>
       </Section>
 
+      <CustomWordsSection />
+
       <div className="pt-2 border-t border-gray-800">
         <button
           onClick={() => api.testChatInject()}
           className="w-full py-2 text-xs text-gray-400 hover:text-gray-200 hover:bg-gray-800 rounded transition-colors"
         >
           Test chat injection
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function CustomWordsSection() {
+  const { settings, updateSettings } = useSettingsStore();
+  const [input, setInput] = useState("");
+
+  if (!settings) return null;
+
+  const words = settings.customWords ?? [];
+
+  const addWord = () => {
+    const trimmed = input.trim();
+    if (!trimmed || words.includes(trimmed)) {
+      setInput("");
+      return;
+    }
+    updateSettings({ customWords: [...words, trimmed] });
+    setInput("");
+  };
+
+  const removeWord = (w: string) =>
+    updateSettings({ customWords: words.filter((x) => x !== w) });
+
+  return (
+    <div className="space-y-3">
+      <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+        Racing vocabulary
+      </div>
+      <p className="text-xs text-gray-500 leading-relaxed">
+        Words Whisper will prioritise. Pre-loaded with common racing terms —
+        add driver names, team names, or any phrase you use often.
+      </p>
+
+      {/* Tag cloud */}
+      <div className="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto">
+        {words.map((w) => (
+          <span
+            key={w}
+            className="flex items-center gap-1 bg-gray-800 text-gray-300 text-xs px-2 py-0.5 rounded-full"
+          >
+            {w}
+            <button
+              onClick={() => removeWord(w)}
+              className="text-gray-500 hover:text-red-400 transition-colors leading-none"
+            >
+              ×
+            </button>
+          </span>
+        ))}
+      </div>
+
+      {/* Add input */}
+      <div className="flex gap-2">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && addWord()}
+          placeholder="Add a word or phrase…"
+          className="flex-1 bg-gray-800 border border-gray-700 rounded px-2 py-1 text-xs text-gray-200 placeholder-gray-600 focus:outline-none focus:border-gray-500"
+        />
+        <button
+          onClick={addWord}
+          disabled={!input.trim()}
+          className="px-3 py-1 text-xs bg-green-700 hover:bg-green-600 disabled:opacity-40 text-white rounded transition-colors"
+        >
+          Add
         </button>
       </div>
     </div>

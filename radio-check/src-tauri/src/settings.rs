@@ -213,7 +213,30 @@ impl Default for RadioCheckSettings {
             whisper_gpu_device: -1,
             selected_language: "en".to_string(),
             translate_to_english: false,
-            custom_words: Vec::new(),
+            custom_words: vec![
+                // Sim-specific commands & phrases
+                "box".into(), "box box".into(), "push push".into(),
+                "affirm".into(), "copy".into(), "check copy".into(),
+                "understood".into(), "radio check".into(),
+                // Racing positions & situations
+                "DRS".into(), "safety car".into(), "VSC".into(),
+                "pit lane".into(), "pit window".into(), "pit exit".into(),
+                "undercut".into(), "overcut".into(), "fuel load".into(),
+                "out lap".into(), "in lap".into(), "warm up".into(),
+                "outlap".into(), "inlap".into(),
+                // iRacing-specific
+                "iRating".into(), "SoF".into(), "caution".into(),
+                "yellow flag".into(), "black flag".into(), "checkered".into(),
+                "incident".into(), "protest".into(),
+                // ACC / Assetto Corsa
+                "Balance of Performance".into(), "BoP".into(),
+                "TC".into(), "ABS".into(), "brake bias".into(),
+                // Common sims/tracks
+                "Spa".into(), "Monza".into(), "Suzuka".into(),
+                "Nurburgring".into(), "Silverstone".into(), "Le Mans".into(),
+                "Zandvoort".into(), "Imola".into(), "Bahrain".into(),
+                "Interlagos".into(), "Hungaroring".into(), "Portimao".into(),
+            ],
             custom_filler_words: Vec::new(),
             word_correction_threshold: 0.8,
             app_language: "en".to_string(),
